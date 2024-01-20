@@ -117,8 +117,8 @@ class _SearchScreenState extends State<SearchScreen> {
 
 class FavoritesScreen extends StatelessWidget {
   FavoritesScreen({Key? key, required this.savedFiles, required this.nameFiles}): super(key: key);
-  List<String> savedFiles;
-  List<String> nameFiles;
+  final List<String> savedFiles;
+  final List<String> nameFiles;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -139,8 +139,8 @@ class FavoritesScreen extends StatelessWidget {
 
 class ResultScreen extends StatefulWidget {
   ResultScreen({Key? key, required this.savedFiles, required this.nameFiles}): super(key: key);
-  List<String> savedFiles;
-  List<String> nameFiles;
+  final List<String> savedFiles;
+  final List<String> nameFiles;
   @override
   State<ResultScreen> createState() => _ResultScreenState();
 }
@@ -158,7 +158,6 @@ class _ResultScreenState extends State<ResultScreen> {
           children: [
             for (var str in widget.nameFiles)
               ResultCard(title: "$str",
-                        saved: widget.savedFiles.contains(str),
                         savedWords: widget.savedFiles,)
           ],
         ),
@@ -236,10 +235,10 @@ class FavoriteCard extends StatelessWidget {
 
 
 class ResultCard extends StatefulWidget {
-  ResultCard({Key? key, required this.title, required this.saved, required this.savedWords}): super(key: key);
+  ResultCard({Key? key, required this.title, required this.savedWords}): super(key: key);
   final String title;
-  bool saved;
-  List<String> savedWords;
+  final List<String> savedWords;
+
   @override
   State<ResultCard> createState() => _ResultCardState();
 }
@@ -290,18 +289,17 @@ class _ResultCardState extends State<ResultCard> {
                           },
                         ),
                         IconButton(
-                          icon: widget.saved ?
+                          icon: widget.savedWords.contains(widget.title) ?
                                 Icon(Icons.favorite) :
                                 Icon(Icons.favorite_border),
                           color: Colors.red,
                           onPressed: (){
                             setState(() {
-                              widget.saved = !widget.saved;
                               // Here we changing the icon.
-                              if(widget.saved){
-                                widget.savedWords.add(widget.title);
-                              } else {
+                              if(widget.savedWords.contains(widget.title)){
                                 widget.savedWords.remove(widget.title);
+                              } else {
+                                widget.savedWords.add(widget.title);
                               }
                             });
                           },
