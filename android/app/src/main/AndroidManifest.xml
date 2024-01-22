@@ -1,8 +1,12 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.INTERNET"/>
     <application
         android:label="programacao_mobile"
         android:name="${applicationName}"
-        android:icon="@mipmap/ic_launcher">
+        android:icon="@mipmap/ic_launcher"
+        android:enableOnBackInvokedCallback="true"
+        >
         <activity
             android:name=".MainActivity"
             android:exported="true"
@@ -31,3 +35,4 @@
             android:value="2" />
     </application>
 </manifest>
+

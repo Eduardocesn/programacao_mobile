@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'pdfPage.dart';
 
 void main() {
   runApp(MyApp());
@@ -42,6 +43,7 @@ class SearchScreen extends StatefulWidget {
 
 class _SearchScreenState extends State<SearchScreen> {
   TextEditingController _searchController = TextEditingController();
+  TextEditingController editionController = TextEditingController();
   TextEditingController dateController = TextEditingController();
   TextEditingController initialDateController = TextEditingController();
   TextEditingController finalDateController = TextEditingController();
@@ -54,8 +56,9 @@ class _SearchScreenState extends State<SearchScreen> {
     return Padding(
       padding: const EdgeInsets.all(16.0),
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.start,
         children: [
+          SizedBox(height: 20,),
           TextField(
             controller: _searchController,
             decoration: InputDecoration(
@@ -65,7 +68,17 @@ class _SearchScreenState extends State<SearchScreen> {
               )
             ),
           ),
-          SizedBox(height: 20),
+          SizedBox(height: 15),
+          TextField(
+            controller: editionController,
+            decoration: InputDecoration(
+                hintText: 'Pesquisar por edição',
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(25.0),
+                )
+            ),
+          ),
+          SizedBox(height: 15,),
           TextField(
             controller: dateController,
             decoration: InputDecoration(
@@ -96,7 +109,7 @@ class _SearchScreenState extends State<SearchScreen> {
               }
             },
           ),
-          SizedBox(height: 20),
+          SizedBox(height: 15),
           Row(
             children: [
               Flexible(child: TextField(
@@ -130,7 +143,7 @@ class _SearchScreenState extends State<SearchScreen> {
                 },
               ),
               ),
-              SizedBox(width: 20,),
+              SizedBox(width: 15,),
               Flexible (
                 child: TextField(
                 controller: finalDateController,
@@ -165,7 +178,7 @@ class _SearchScreenState extends State<SearchScreen> {
               ),
             ],
           ),
-          SizedBox(height: 20,),
+          SizedBox(height: 50,),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -211,7 +224,7 @@ class _SearchScreenState extends State<SearchScreen> {
 }
 
 class FavoritesScreen extends StatelessWidget {
-  FavoritesScreen({Key? key, required this.savedFiles, required this.nameFiles}): super(key: key);
+  FavoritesScreen({super.key, required this.savedFiles, required this.nameFiles});
   final List<String> savedFiles;
   final List<String> nameFiles;
   @override
@@ -247,7 +260,7 @@ class FavoritesScreen extends StatelessWidget {
 }
 
 class ResultScreen extends StatefulWidget {
-  ResultScreen({Key? key, required this.savedFiles, required this.nameFiles}): super(key: key);
+  ResultScreen({super.key, required this.savedFiles, required this.nameFiles});
   final List<String> savedFiles;
   final List<String> nameFiles;
   @override
@@ -267,7 +280,7 @@ class _ResultScreenState extends State<ResultScreen> {
         child: ListView(
           children: [
             for (var str in widget.nameFiles)
-              ResultCard(title: "$str",
+              ResultCard(title: str,
                         savedWords: widget.savedFiles,)
           ],
         ),
@@ -290,13 +303,16 @@ class _ResultScreenState extends State<ResultScreen> {
 }
 
 class FavoriteCard extends StatelessWidget {
-  FavoriteCard({Key? key, required this.title}): super(key: key);
+  FavoriteCard({super.key, required this.title});
   final String title;
 
   @override
   Widget build(BuildContext context) {
     return Material(
       child: InkWell(
+        onTap: () {
+          Navigator.push(context, MaterialPageRoute(builder: (context) => PdfViewerPage()));
+        },
         child: Column(
           children: [
             SizedBox( // Constrain the size of the list tile
@@ -358,7 +374,7 @@ class FavoriteCard extends StatelessWidget {
 
 
 class ResultCard extends StatefulWidget {
-  ResultCard({Key? key, required this.title, required this.savedWords}): super(key: key);
+  ResultCard({super.key, required this.title, required this.savedWords});
   final String title;
   final List<String> savedWords;
 
