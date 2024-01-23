@@ -5,7 +5,7 @@
 
 ## Telas
 
-  Para montar o aplicativo foram feitas 4 telas, dentre elas temos:
+```  Para montar o aplicativo foram feitas 4 telas, dentre elas temos:```
 
 ### - Tela principal
 
