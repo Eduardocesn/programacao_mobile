@@ -16,7 +16,7 @@ class FavoritesScreen extends StatelessWidget {
         child: ListView(
           children: [
             for (var str in savedFiles)
-              FavoriteCard(title: str),
+              FavoriteCard(title: str, savedWords: savedFiles,),
           ],
         ),
       ),
@@ -37,9 +37,16 @@ class FavoritesScreen extends StatelessWidget {
   }
 }
 
-class FavoriteCard extends StatelessWidget {
-  FavoriteCard({super.key, required this.title});
+class FavoriteCard extends StatefulWidget {
+  FavoriteCard({super.key, required this.title, required this.savedWords});
   final String title;
+  final List<String> savedWords;
+
+  @override
+  State<FavoriteCard> createState() => _FavoriteCardState();
+}
+
+class _FavoriteCardState extends State<FavoriteCard> {
 
   @override
   Widget build(BuildContext context) {
@@ -63,7 +70,7 @@ class FavoriteCard extends StatelessWidget {
                       children: [
                         Padding(padding: const EdgeInsets.only(top: 20)),
                         Text(
-                          title,
+                          widget.title,
                           style: TextStyle(
                             fontSize: 20.0,
                           ),
@@ -74,11 +81,14 @@ class FavoriteCard extends StatelessWidget {
                     ),
                   ),
                   Padding( // Padding for the trailing widget
-                    padding: const EdgeInsets.all(12.0),
+                    padding: EdgeInsets.only(right: 12, top: 3, bottom: 3),
                     child: Column(
                         children: [
-                          Text("Renomear"),
-                          const SizedBox(width:10),
+                          Flexible(
+                            child: TextButton(child: Text("Renomear"),
+                              onPressed: (){},
+                            ),
+                          ),
                           Row(
                             mainAxisSize: MainAxisSize.min,
                             children: <Widget>[
@@ -90,6 +100,22 @@ class FavoriteCard extends StatelessWidget {
                               IconButton(
                                 icon: Icon(Icons.share),
                                 onPressed: (){
+                                },
+                              ),
+                              IconButton(
+                                icon: widget.savedWords.contains(widget.title) ?
+                                Icon(Icons.favorite) :
+                                Icon(Icons.favorite_border),
+                                color: Colors.red,
+                                onPressed: (){
+                                  setState(() {
+                                    // Here we changing the icon.
+                                    if(widget.savedWords.contains(widget.title)){
+                                      widget.savedWords.remove(widget.title);
+                                    } else {
+                                      widget.savedWords.add(widget.title);
+                                    }
+                                  });
                                 },
                               ),
                             ],

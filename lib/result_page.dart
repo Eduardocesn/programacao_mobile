@@ -1,14 +1,10 @@
 import 'package:flutter/material.dart';
 
-class ResultScreen extends StatefulWidget {
+
+class ResultScreen extends StatelessWidget {
   ResultScreen({super.key, required this.savedFiles, required this.nameFiles});
   final List<String> savedFiles;
   final List<String> nameFiles;
-  @override
-  State<ResultScreen> createState() => _ResultScreenState();
-}
-
-class _ResultScreenState extends State<ResultScreen> {
 
   @override
   Widget build(BuildContext context) {
@@ -20,9 +16,9 @@ class _ResultScreenState extends State<ResultScreen> {
       body: Center(
         child: ListView(
           children: [
-            for (var str in widget.nameFiles)
+            for (var str in nameFiles)
               ResultCard(title: str,
-                savedWords: widget.savedFiles,)
+                savedWords: savedFiles,)
           ],
         ),
       ),
