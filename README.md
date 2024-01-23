@@ -23,7 +23,8 @@ foram dispostos dentro de um Widget Row para permitir que eles apareçam um do l
   Abaixo dos campos de pesquisa temos uma Row com dois ElevatedButtons dentro, que são os botões de pesquisa e de favoritos
 o botão de pesquisa redireciona para a tela de resultados de consulta e o botão de favoritos para a tela de diários salvos,
 o redirecionamento é feito por meio do Navigator.push e os dados são passados para a tela por meio de um array passado como argumento
-(porém isso provavelmente será mudado ao longo do desenvolvimento do aplicativo).
+(porém isso provavelmente será mudado ao longo do desenvolvimento do aplicativo). Além disso em todas as telas foram usados
+SizedBoxes em locais diferentes para posicionar melhor os widgets na tela, permitindo uma melhor aparência geral do aplicativo.
 
 ### - Tela de resultados
 
@@ -34,7 +35,7 @@ Porém no body temos a listagem dos diários que foram encontrados na pesquisa.
 com um Material e InkWell para permitir ações ao clicar no card, dentro do InkWell foi montado o card utilizando Column, Row, Expanded, Padding
 permitindo que o card possua um título, subtítulo e um trailing. 
 
-  No trailing foram colocados três IconButtons, um de download, outro de compartilhar e o de favorito, permitindo que futuramente sejam implementadas as funções específicas de cada botão. Por enquanto apenas a função de favorito foi implementada de uma forma apenas para testes.
+  No trailing foram colocados três IconButtons, um de download, outro de compartilhar e o de favorito, permitindo que futuramente sejam implementadas as funções específicas de cada botão. Por enquanto apenas a função de favorito foi implementada de uma forma apenas para testes. Além disso no final do card foi utilizado um Divider para deixar a divisão entre os cards mais visual.
 
 ### - Tela de favoritos
 
