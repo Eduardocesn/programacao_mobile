@@ -3,6 +3,8 @@
 - Carlos Eduardo Santana Nascimento 202100011252
 - Max Antônio Lima Barreto 202100011744
 
+Caso queira baixar o apk do aplicativo ele [encontra-se disponível aqui](https://drive.google.com/file/d/1uMidp9lczaefq3X9XeHRA-iOowyMHUAS/view?usp=sharing)
+
 ## Telas
 
   Para montar o aplicativo foram feitas 4 telas, dentre elas temos:
