@@ -49,9 +49,18 @@ class _SearchScreenState extends State<SearchScreen> {
   TextEditingController dateController = TextEditingController();
   TextEditingController initialDateController = TextEditingController();
   TextEditingController finalDateController = TextEditingController();
+
   List<String> savedFiles = <String>[];
   List<String> nameFiles = ["Arquivo 1", "Arquivo 2", "Arquivo 3", "Arquivo 4",
     "Arquivo 5","Arquivo 6","Arquivo 7","Arquivo 8","Arquivo 9","Arquivo 10",];
+
+  void clearFields() {
+    _searchController.clear();
+    editionController.clear();
+    dateController.clear();
+    initialDateController.clear();
+    finalDateController.clear();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -194,12 +203,14 @@ class _SearchScreenState extends State<SearchScreen> {
 
               onPressed: () {
                 // Implemente a lógica de pesquisa aqui
-                String searchTerm = _searchController.text;
-                print('Realizando pesquisa: $searchTerm');
+                print('Nome: ${_searchController.text}');
+                print('Edição: ${editionController.text}');
+                print('Data: ${dateController.text}');
+                print('Data Inicial e Final: ${initialDateController.text} ${finalDateController.text}');
                 Navigator.push(
                     context,
                     MaterialPageRoute(builder: (context) => ResultScreen(savedFiles: savedFiles, nameFiles: nameFiles,)),
-                );
+                ).then((value) => clearFields());
               },
               child: Text('Pesquisar'),
               ),
@@ -209,7 +220,7 @@ class _SearchScreenState extends State<SearchScreen> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(builder: (context) => FavoritesScreen(savedFiles: savedFiles, nameFiles: nameFiles,)),
-                  );
+                  ).then((value) => clearFields());
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Color.fromRGBO(226, 81, 81, 1),

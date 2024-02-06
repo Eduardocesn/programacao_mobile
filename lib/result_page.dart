@@ -95,8 +95,8 @@ class _ResultCardState extends State<ResultCard> {
                         ),
                         IconButton(
                           icon: widget.savedWords.contains(widget.title) ?
-                          Icon(Icons.favorite) :
-                          Icon(Icons.favorite_border),
+                            Icon(Icons.favorite) :
+                            Icon(Icons.favorite_border),
                           color: Colors.red,
                           onPressed: (){
                             setState(() {
