@@ -27,16 +27,17 @@ Future<void> writeData(List<List<dynamic>> dados) async{
     print("Erro ao escrever no arquivo");
   }
 }
+
 Future<String> get _localPath async {
-  final directory = await getDownloadsDirectory();
-  if(directory != null){
-    return directory.path;
-  }else{
-    return "";
-  }
+  final directory = await getApplicationDocumentsDirectory();
+  return directory.path;
 }
 
 Future<File> get _localFile async {
   final path = await _localPath;
-  return File('$path/favoritos.txt');
+  final file =  File('$path/favoritos.txt');
+  if (!(await file.exists())){
+    await file.create();
+  }
+  return file;
 }

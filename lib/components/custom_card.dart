@@ -1,92 +1,18 @@
 import 'package:flutter/material.dart';
+import '../screens/pdf_page.dart';
+import '../tools/favorite_data.dart';
 
-import 'pdf_page.dart';
-import 'favorite_data.dart';
-
-class FavoritesScreen extends StatefulWidget {
-  FavoritesScreen({super.key, required this.savedFiles, required this.nameFiles});
-  final List<String> savedFiles;
-  final List<String> nameFiles;
-
-  @override
-  State<FavoritesScreen> createState() => _FavoritesScreenState();
-}
-
-class _FavoritesScreenState extends State<FavoritesScreen> {
-
-  @override
-  void dispose(){
-    super.dispose();
-  }
-
-  @override
-  void initState(){
-    super.initState();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-
-    return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        title: Text('Favoritos'),
-      ),
-      body: Center(
-        child: FutureBuilder(
-          future: loadData(),
-          builder: (context, snapshot){
-            if (snapshot.connectionState == ConnectionState.waiting){
-              return CircularProgressIndicator();
-            } else if (snapshot.hasError) {
-              return Text("Erro ao carregar dados");
-            } else {
-              List<List<dynamic>>? dadosFavoritos = snapshot.data;
-              if (dadosFavoritos != null){
-                return ListView.builder(
-                    itemCount: dadosFavoritos.length,
-                    itemBuilder: (context, index){
-                      List<dynamic> item = dadosFavoritos[index];
-                      return FavoriteCard(
-                        args: item,
-                        dadosFavoritos: dadosFavoritos,
-                      );
-                    }
-                );
-              } else {
-                return SizedBox();
-              }
-            }
-          },
-
-        ),
-      ),
-      bottomNavigationBar: BottomAppBar(
-        color: Color.fromRGBO(226, 81, 81, 1),
-        child: Center(
-          child: Text(
-            "Diário Oficial de Recife",
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 18,
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class FavoriteCard extends StatefulWidget {
-  FavoriteCard({super.key, required this.args, required this.dadosFavoritos});
+class CustomCard extends StatefulWidget {
+  CustomCard({super.key, required this.args, required this.dadosFavoritos, required this.favoriteScreen});
+  final bool favoriteScreen;
   final List<dynamic> args;
   List<List<dynamic>> dadosFavoritos;
+
   @override
-  State<FavoriteCard> createState() => _FavoriteCardState();
+  State<CustomCard> createState() => _CustomCardState();
 }
 
-class _FavoriteCardState extends State<FavoriteCard> {
+class _CustomCardState extends State<CustomCard> {
 
   @override
   Widget build(BuildContext context) {
@@ -125,11 +51,12 @@ class _FavoriteCardState extends State<FavoriteCard> {
                     padding: EdgeInsets.only(right: 12, top: 3, bottom: 3),
                     child: Column(
                         children: [
-                          Flexible(
-                            child: TextButton(child: Text("Renomear"),
-                              onPressed: (){},
+                          if (widget.favoriteScreen)
+                            Flexible(
+                              child: TextButton(child: Text("Renomear"),
+                                onPressed: (){},
+                              ),
                             ),
-                          ),
                           Row(
                             mainAxisSize: MainAxisSize.min,
                             children: <Widget>[
@@ -156,7 +83,7 @@ class _FavoriteCardState extends State<FavoriteCard> {
                                       widget.dadosFavoritos.remove(widget.args);
                                     } else {
                                       saved = true;
-                                      //widget.dadosFavoritos.add(widget.args);
+                                      widget.dadosFavoritos.add(widget.args);
                                     }
                                   });
                                   await writeData(widget.dadosFavoritos);
@@ -175,5 +102,4 @@ class _FavoriteCardState extends State<FavoriteCard> {
       ),
     );
   }
-
 }
