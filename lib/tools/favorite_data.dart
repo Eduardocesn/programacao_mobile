@@ -2,27 +2,46 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:path_provider/path_provider.dart';
 
-Future<List<List<dynamic>>> loadData() async {
+Future<List<List<String>>> loadData() async {
+  List<List<String>> resultado = [];
   try{
     final file = await _localFile;
-    final contents = await file.readAsString();
+    // Leia o conteúdo do arquivo
+    Stream<List<int>> conteudo = file.openRead();
 
-    List<dynamic> listaDinamica = jsonDecode(contents);
-    List<List<dynamic>> listaListas = listaDinamica
-        .map((lista) => (lista as List<dynamic>).map((e) => [0,1,3].contains(lista.indexOf(e)) ? e as int : e as String).toList())
-        .toList();
-    return listaListas;
+    // Decode o conteúdo como utf8 e converta em linhas
+    Stream<String> linhas = conteudo.transform(utf8.decoder).transform(LineSplitter());
+
+    // Processando as linhas
+    await for (String linha in linhas) {
+      // Divida a linha em partes
+      List<String> partes = linha.split(',');
+
+      // Adicione as partes à lista de resultado
+      resultado.add(partes);
+    }
   } catch (e) {
     print("Erro ao ler arquivo $e");
-    return [];
   }
+  return resultado;
 }
 
-Future<void> writeData(List<List<dynamic>> dados) async{
+Future<void> writeData(List<List<String>> dados) async{
   try {
     final file = await _localFile;
-    String contents = jsonEncode(dados);
-    await file.writeAsString(contents);
+    IOSink sink = file.openWrite();
+
+    // Escreva os dados no arquivo
+    for (List<String> linha in dados) {
+      String linhaFormatada = '${linha.join(',')}\n'; // Adiciona uma quebra de linha
+      sink.write(linhaFormatada);
+    }
+
+    // Feche o arquivo
+    await sink.flush();
+    await sink.close();
+
+    print('Dados escritos com sucesso!');
   } catch (e) {
     print("Erro ao escrever no arquivo");
   }

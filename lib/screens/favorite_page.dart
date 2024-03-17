@@ -20,12 +20,14 @@ class FavoritesScreen extends StatelessWidget {
             } else if (snapshot.hasError) {
               return Text("Erro ao carregar dados");
             } else {
-              List<List<dynamic>>? dadosFavoritos = snapshot.data;
+              List<List<String>>? dadosFavoritos = snapshot.data;
               if (dadosFavoritos != null){
+                print(dadosFavoritos.length);
+
                 return ListView.builder(
                     itemCount: dadosFavoritos.length,
                     itemBuilder: (context, index){
-                      List<dynamic> item = dadosFavoritos[index];
+                      List<String> item = dadosFavoritos[index];
                       return CustomCard(
                         args: item,
                         dadosFavoritos: dadosFavoritos,

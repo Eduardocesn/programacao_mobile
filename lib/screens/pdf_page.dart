@@ -4,6 +4,10 @@ import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 
 /// Represents the Homepage for Navigation
 class PdfViewerPage extends StatefulWidget {
+  PdfViewerPage({super.key, required this.link, required this.titulo, required this.stringBusca});
+  final String link;
+  final String titulo;
+  final String stringBusca;
   @override
   State<PdfViewerPage> createState() => _PdfViewerPage();
 }
@@ -22,6 +26,13 @@ class _PdfViewerPage extends State<PdfViewerPage> {
     _showToolbar = false;
     _showScrollHead = true;
     super.initState();
+
+    if(widget.stringBusca.isNotEmpty){
+      setState(() {
+        _showToolbar = true;
+        
+      });
+    }
   }
 
   /// Ensure the entry history of text search.
@@ -51,6 +62,7 @@ class _PdfViewerPage extends State<PdfViewerPage> {
           ? AppBar(
         flexibleSpace: SafeArea(
           child: SearchToolbar(
+            stringBusca: widget.stringBusca,
             key: _textSearchKey,
             showTooltip: true,
             controller: _pdfViewerController,
@@ -81,7 +93,7 @@ class _PdfViewerPage extends State<PdfViewerPage> {
       )
           : AppBar(
         title: Text(
-          'Teste',
+          widget.titulo,
           style: TextStyle(color: Colors.black87),
         ),
         actions: [
@@ -105,7 +117,7 @@ class _PdfViewerPage extends State<PdfViewerPage> {
       body: Stack(
         children: [
           SfPdfViewer.network(
-            'https://dome.recife.pe.gov.br/upload_dome/DO_001_04_01_2024-assinado.pdf',
+            widget.link,
             controller: _pdfViewerController,
             canShowScrollHead: _showScrollHead,
           ),
@@ -155,6 +167,7 @@ class SearchToolbar extends StatefulWidget {
     this.controller,
     this.onTap,
     this.showTooltip = true,
+    required this.stringBusca,
     super.key,
   });
 
@@ -167,6 +180,7 @@ class SearchToolbar extends StatefulWidget {
   /// Called when the search toolbar item is selected.
   final SearchTapCallback? onTap;
 
+  final String stringBusca;
   @override
   SearchToolbarState createState() => SearchToolbarState();
 }
@@ -193,6 +207,21 @@ class SearchToolbarState extends State<SearchToolbar> {
     super.initState();
     focusNode = FocusNode();
     focusNode?.requestFocus();
+
+    if (widget.stringBusca.isNotEmpty) {
+      // Inicia a busca automática
+      _pdfTextSearchResult = widget.controller!.searchText(widget.stringBusca);
+      _pdfTextSearchResult.addListener(() {
+        if (super.mounted) {
+          setState(() {});
+        }
+        if (!_pdfTextSearchResult.hasResult &&
+            _pdfTextSearchResult.isSearchCompleted) {
+          // Trata caso não haja resultado
+          widget.onTap?.call('noResultFound');
+        }
+      });
+    }
   }
 
   @override

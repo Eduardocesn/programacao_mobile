@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import '../screens/favorite_page.dart';
@@ -14,10 +15,9 @@ class _SearchScreenState extends State<SearchScreen> {
   TextEditingController dateController = TextEditingController();
   TextEditingController initialDateController = TextEditingController();
   TextEditingController finalDateController = TextEditingController();
+  var db = FirebaseFirestore.instance;
+  List<List<String>> result = [];
 
-  List<String> savedFiles = <String>[];
-  List<String> nameFiles = ["Arquivo 1", "Arquivo 2", "Arquivo 3", "Arquivo 4",
-    "Arquivo 5","Arquivo 6","Arquivo 7","Arquivo 8","Arquivo 9","Arquivo 10",];
 
   void clearFields() {
     _searchController.clear();
@@ -74,7 +74,7 @@ class _SearchScreenState extends State<SearchScreen> {
               );
               if(pickedDate != null ){
                 print(pickedDate);  //get the picked date in the format => 2022-07-04 00:00:00.000
-                String formattedDate = DateFormat('dd-MM-yyyy').format(pickedDate); // format date in required form here we use yyyy-MM-dd that means time is removed
+                String formattedDate = DateFormat('yyyy-MM-dd').format(pickedDate); // format date in required form here we use yyyy-MM-dd that means time is removed
                 print(formattedDate); //formatted date output using intl package =>  2022-07-04
                 //You can format date as per your need
 
@@ -107,7 +107,7 @@ class _SearchScreenState extends State<SearchScreen> {
                   );
                   if(pickedDate != null ){
                     print(pickedDate);  //get the picked date in the format => 2022-07-04 00:00:00.000
-                    String formattedDate = DateFormat('dd-MM-yyyy').format(pickedDate); // format date in required form here we use yyyy-MM-dd that means time is removed
+                    String formattedDate = DateFormat('yyyy-MM-dd').format(pickedDate); // format date in required form here we use yyyy-MM-dd that means time is removed
                     print(formattedDate); //formatted date output using intl package =>  2022-07-04
                     //You can format date as per your need
 
@@ -139,8 +139,7 @@ class _SearchScreenState extends State<SearchScreen> {
                         lastDate: DateTime(2025)
                     );
                     if(pickedDate != null ){
-                      print(pickedDate);  //get the picked date in the format => 2022-07-04 00:00:00.000
-                      String formattedDate = DateFormat('dd-MM-yyyy').format(pickedDate); // format date in required form here we use yyyy-MM-dd that means time is removed
+                      String formattedDate = DateFormat('yyyy-MM-dd').format(pickedDate); // format date in required form here we use yyyy-MM-dd that means time is removed
                       print(formattedDate); //formatted date output using intl package =>  2022-07-04
                       //You can format date as per your need
 
@@ -172,15 +171,50 @@ class _SearchScreenState extends State<SearchScreen> {
                   print('Edição: ${editionController.text}');
                   print('Data: ${dateController.text}');
                   print('Data Inicial e Final: ${initialDateController.text} ${finalDateController.text}');
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) =>
-                            ResultScreen(
-                              searchedFiles: [],
-                            )
-                    ),
-                  ).then((value) => clearFields());
+
+                  db.collection('docs').get().then(
+                      (querySnapshot) {
+                        for (var doc in querySnapshot.docs) {
+
+                          if (doc['edicao'].toString() == editionController.text) {
+                            result.add([doc['id'].toString(), doc['nome'], doc['link'], '', '', doc['file']]);
+                          }
+                          else if (dateController.text != ''){
+                            if (doc['data_edicao'].contains(dateController.text)) {
+                              result.add([doc['id'].toString(), doc['nome'], doc['link'], '', '', doc['file']]);
+                            }
+                          }
+                          else if (initialDateController.text != '' && finalDateController.text != ''){
+                            if(doc['data_edicao'].compareTo(initialDateController.text) == 1 && doc['data_edicao'].compareTo(finalDateController.text) == -1){
+                              result.add([doc['id'].toString(), doc['nome'], doc['link'], '', '', doc['file']]);
+                            }
+                          }
+                          else if (_searchController.text != ''){
+                            if (doc['content'].contains(_searchController.text)){
+                              result.add([doc['id'].toString(), doc['nome'], doc['link'], _searchController.text,'', doc['file']]);
+                            }
+                          }
+                        }
+                      }
+                  );
+
+                  Future.delayed(Duration(seconds: 1), () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) =>
+                              ResultScreen(
+                                searchedFiles: result,
+                              )
+                      ),
+                    );
+                  });
+
+                  Future.delayed(Duration(seconds: 4), () {
+                    clearFields();
+                    result = [];
+                  });
+
                 },
                 child: Text('Pesquisar'),
               ),
