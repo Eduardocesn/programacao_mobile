@@ -1,6 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:my_app/components/bottom_bar.dart';
+import 'package:my_app/screens/authentication_screen.dart';
 import '../screens/favorite_page.dart';
 import '../screens/result_page.dart';
 
@@ -17,7 +20,13 @@ class _SearchScreenState extends State<SearchScreen> {
   TextEditingController finalDateController = TextEditingController();
   var db = FirebaseFirestore.instance;
   List<List<String>> result = [];
+  final FirebaseAuth auth = FirebaseAuth.instance;
 
+  void signOut() async {
+    await auth.signOut();
+    Navigator.pushReplacement(
+        context, MaterialPageRoute(builder: (context) => AuthenticationScreen()));
+  }
 
   void clearFields() {
     _searchController.clear();
@@ -29,11 +38,29 @@ class _SearchScreenState extends State<SearchScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(16.0),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
+    return Scaffold(
+      resizeToAvoidBottomInset: false,
+      appBar: AppBar(
+        actions: <Widget>[
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: TextButton(
+                onPressed:() {
+                  signOut();
+                },
+                child: Text("Sair")
+            ),
+          ),
+        ],
+        centerTitle: true,
+        title: Text("Consulta"),
+      ),
+        bottomNavigationBar: bottomBar(),
+        body: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
           SizedBox(height: 20,),
           TextField(
             controller: _searchController,
@@ -171,11 +198,11 @@ class _SearchScreenState extends State<SearchScreen> {
                   print('Edição: ${editionController.text}');
                   print('Data: ${dateController.text}');
                   print('Data Inicial e Final: ${initialDateController.text} ${finalDateController.text}');
-
+                  var bool = false;
+                  var i = 0;
                   db.collection('docs').get().then(
                       (querySnapshot) {
                         for (var doc in querySnapshot.docs) {
-
                           if (doc['edicao'].toString() == editionController.text) {
                             result.add([doc['id'].toString(), doc['nome'], doc['link'], '', '', doc['file']]);
                           }
@@ -195,25 +222,23 @@ class _SearchScreenState extends State<SearchScreen> {
                             }
                           }
                         }
+                        print("finish");
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) =>
+                                  ResultScreen(
+                                    searchedFiles: result,
+                                  )
+                          ),
+                        );
+                        Future.delayed(Duration(seconds: 2), () {
+                          clearFields();
+                          result = [];
+                        });
                       }
                   );
 
-                  Future.delayed(Duration(seconds: 1), () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) =>
-                              ResultScreen(
-                                searchedFiles: result,
-                              )
-                      ),
-                    );
-                  });
-
-                  Future.delayed(Duration(seconds: 4), () {
-                    clearFields();
-                    result = [];
-                  });
 
                 },
                 child: Text('Pesquisar'),
@@ -237,6 +262,7 @@ class _SearchScreenState extends State<SearchScreen> {
           )
         ],
       ),
+    )
     );
   }
 }
