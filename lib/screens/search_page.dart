@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -18,8 +17,6 @@ class _SearchScreenState extends State<SearchScreen> {
   TextEditingController dateController = TextEditingController();
   TextEditingController initialDateController = TextEditingController();
   TextEditingController finalDateController = TextEditingController();
-  var db = FirebaseFirestore.instance;
-  List<List<String>> result = [];
   final FirebaseAuth auth = FirebaseAuth.instance;
 
   void signOut() async {
@@ -193,54 +190,21 @@ class _SearchScreenState extends State<SearchScreen> {
                 ),
 
                 onPressed: () {
-                  // Implemente a lógica de pesquisa aqui
-                  print('Nome: ${_searchController.text}');
-                  print('Edição: ${editionController.text}');
-                  print('Data: ${dateController.text}');
-                  print('Data Inicial e Final: ${initialDateController.text} ${finalDateController.text}');
-                  var bool = false;
-                  var i = 0;
-                  db.collection('docs').get().then(
-                      (querySnapshot) {
-                        for (var doc in querySnapshot.docs) {
-                          if (doc['edicao'].toString() == editionController.text) {
-                            result.add([doc['id'].toString(), doc['nome'], doc['link'], '', '', doc['file']]);
-                          }
-                          else if (dateController.text != ''){
-                            if (doc['data_edicao'].contains(dateController.text)) {
-                              result.add([doc['id'].toString(), doc['nome'], doc['link'], '', '', doc['file']]);
-                            }
-                          }
-                          else if (initialDateController.text != '' && finalDateController.text != ''){
-                            if(doc['data_edicao'].compareTo(initialDateController.text) == 1 && doc['data_edicao'].compareTo(finalDateController.text) == -1){
-                              result.add([doc['id'].toString(), doc['nome'], doc['link'], '', '', doc['file']]);
-                            }
-                          }
-                          else if (_searchController.text != ''){
-                            if (doc['content'].contains(_searchController.text)){
-                              result.add([doc['id'].toString(), doc['nome'], doc['link'], _searchController.text,'', doc['file']]);
-                            }
-                          }
-                        }
-                        print("finish");
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) =>
-                                  ResultScreen(
-                                    searchedFiles: result,
-                                  )
-                          ),
-                        );
-                        Future.delayed(Duration(seconds: 2), () {
-                          clearFields();
-                          result = [];
-                        });
-                      }
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => ResultScreen(
+                      nome: _searchController.text,
+                      edicao: editionController.text,
+                      data: dateController.text,
+                      dataInicial: initialDateController.text,
+                      dataFinal: finalDateController.text,
+                    )),
                   );
-
-
+                  Future.delayed(Duration(seconds: 2), () {
+                    clearFields();
+                        });
                 },
+
                 child: Text('Pesquisar'),
               ),
               SizedBox(width:40),

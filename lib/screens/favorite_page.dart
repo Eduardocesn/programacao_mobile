@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../tools/favorite_data.dart';
+import 'package:favorite_data/favorite_data.dart';
 import '../components/custom_card.dart';
 import '../components/bottom_bar.dart';
 
@@ -20,14 +20,14 @@ class FavoritesScreen extends StatelessWidget {
             } else if (snapshot.hasError) {
               return Text("Erro ao carregar dados");
             } else {
-              List<List<String>>? dadosFavoritos = snapshot.data;
+              List<List<dynamic>>? dadosFavoritos = snapshot.data;
               if (dadosFavoritos != null){
                 print(dadosFavoritos.length);
 
                 return ListView.builder(
                     itemCount: dadosFavoritos.length,
                     itemBuilder: (context, index){
-                      List<String> item = dadosFavoritos[index];
+                      List<String>? item = dadosFavoritos[index].cast<String>();
                       return CustomCard(
                         args: item,
                         dadosFavoritos: dadosFavoritos,

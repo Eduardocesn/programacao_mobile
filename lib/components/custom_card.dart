@@ -5,7 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
 import '../screens/pdf_page.dart';
-import '../tools/favorite_data.dart';
+import 'package:favorite_data/favorite_data.dart';
 import 'package:share_plus/share_plus.dart';
 import 'dart:io';
 
@@ -13,7 +13,7 @@ class CustomCard extends StatefulWidget {
   CustomCard({super.key, required this.args, required this.dadosFavoritos, required this.favoriteScreen});
   final bool favoriteScreen;
   final List<String> args;
-  List<List<String>> dadosFavoritos;
+  List<List<dynamic>> dadosFavoritos;
 
   @override
   State<CustomCard> createState() => _CustomCardState();
