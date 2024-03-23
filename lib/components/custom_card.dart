@@ -37,7 +37,7 @@ class _CustomCardState extends State<CustomCard> {
     return Material(
       child: InkWell(
         onTap: () {
-          Navigator.push(context, MaterialPageRoute(builder: (context) => PdfViewerPage(link:widget.args[2], titulo: widget.args[1], stringBusca: !widget.favoriteScreen ? widget.args[3] : '',)));
+          Navigator.push(context, MaterialPageRoute(builder: (context) => PdfViewerPage(link:widget.args[2], titulo: widget.args[1], stringBusca: !widget.favoriteScreen ? widget.args[4] : '',)));
         },
         child: Column(
           children: [
@@ -54,7 +54,7 @@ class _CustomCardState extends State<CustomCard> {
                       children: [
                         Padding(padding: const EdgeInsets.only(top: 20)),
                         Text(
-                          widget.args[4] == '' ? widget.args[1] : widget.args[4],
+                          widget.args[5] == '' ? widget.args[1] : widget.args[5],
                           style: TextStyle(
                             fontSize: 20.0,
                           ),
@@ -141,7 +141,7 @@ class _CustomCardState extends State<CustomCard> {
     if(await _checkPermission()) {
       var dir = await DownloadsPathProvider.downloadsDirectory;
       if (dir != null) {
-        String savename = widget.args[5];
+        String savename = widget.args[3];
         savePath = "${dir.path}/$savename";
         print("\n\n$savePath\n\n");
         downloading = true;
@@ -199,7 +199,7 @@ class _CustomCardState extends State<CustomCard> {
                   setState(() {
                     if (valueText != null && valueText != ''){
                       widget.dadosFavoritos.remove(widget.args);
-                      widget.args[4] = valueText!;
+                      widget.args[5] = valueText!;
                       widget.dadosFavoritos.add(widget.args);
                       writeData(widget.dadosFavoritos);
                     }

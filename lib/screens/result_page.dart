@@ -22,7 +22,7 @@ class _ResultScreenState extends State<ResultScreen> {
   Future<Result?> getDocs() async {
     try {
       final conn = await Connection.open(Endpoint(
-        host:'ip',
+        host:'192.168.100.105',
         database:'diario_recife',
         username: 'postgres',
         password: 'postgres',
