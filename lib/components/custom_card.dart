@@ -203,7 +203,12 @@ class _CustomCardState extends State<CustomCard> {
                 onPressed: () {
                   setState(() {
                     if (valueText != null && valueText != ''){
-                      widget.dadosFavoritos.remove(widget.args);
+                      for (var elem in widget.dadosFavoritos){
+                        if (elem[0] == widget.args[0]){
+                          widget.dadosFavoritos.remove(elem);
+                          break;
+                        }
+                      }
                       widget.args[5] = valueText!;
                       widget.dadosFavoritos.add(widget.args);
                       writeData(widget.dadosFavoritos);
