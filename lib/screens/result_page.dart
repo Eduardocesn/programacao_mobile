@@ -22,7 +22,7 @@ class _ResultScreenState extends State<ResultScreen> {
   Future<Result?> getDocs() async {
     try {
       final conn = await Connection.open(Endpoint(
-        host:'192.168.100.105',
+        host:'ip',
         database:'diario_recife',
         username: 'postgres',
         password: 'postgres',
@@ -35,6 +35,7 @@ class _ResultScreenState extends State<ResultScreen> {
                     "AND (data_edicao = @data OR @data = '') "
                     "AND ((data_edicao BETWEEN @data_inicial AND @data_final) OR @data_inicial = '' OR @data_final = '') "
                     "AND (content LIKE '%${widget.nome}%' OR @nome = '')"),
+
           parameters: { 'edicao': widget.edicao,
                         'data': widget.data,
                         'data_inicial': widget.dataInicial,

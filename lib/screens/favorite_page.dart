@@ -27,7 +27,7 @@ class FavoritesScreen extends StatelessWidget {
                 return ListView.builder(
                     itemCount: dadosFavoritos.length,
                     itemBuilder: (context, index){
-                      List<String>? item = dadosFavoritos[index].cast<String>();
+                      List<String> item = dadosFavoritos[index].cast<String>();
                       return CustomCard(
                         args: item,
                         dadosFavoritos: dadosFavoritos,

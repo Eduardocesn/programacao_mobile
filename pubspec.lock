@@ -166,7 +166,7 @@ packages:
     description:
       path: "."
       ref: HEAD
-      resolved-ref: "738e1d2fa49a42e95a0ebac43141b1e935214384"
+      resolved-ref: "3dd2077be0898edbb03b5aa9cec600ecbebcb2e1"
       url: "https://github.com/Eduardocesn/favorite_data.git"
     source: git
     version: "0.0.1"

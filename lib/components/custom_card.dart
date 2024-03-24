@@ -1,7 +1,6 @@
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:dio/dio.dart';
 import 'package:downloads_path_provider_28/downloads_path_provider_28.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
 import '../screens/pdf_page.dart';
@@ -107,10 +106,16 @@ class _CustomCardState extends State<CustomCard> {
                                 color: Colors.red,
                                 onPressed: () async{
                                   setState(() {
+
                                     // Here we changing the icon.
                                     if(saved){
                                       saved = false;
-                                      widget.dadosFavoritos.remove(widget.args);
+                                      for (var elem in widget.dadosFavoritos){
+                                        if (elem[0] == widget.args[0]){
+                                          widget.dadosFavoritos.remove(elem);
+                                          break;
+                                        }
+                                      }
                                     } else {
                                       saved = true;
                                       widget.dadosFavoritos.add(widget.args);
